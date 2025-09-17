@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     {
       "channel_name": "Asia Cup English",
       "channel_url": "https://jiotvmblive.cdn.jio.com/bpk-tv/Asia_Cup_English_MOB/WDVLive/index.mpd",
-      "cookie": "__hdnea__=st=1758004202~exp=1758090602~acl=/*~hmac=79233308f5f09e55bba254ecbddae305178cdd5b847ff61f51a0f141c68979a6"
+      "cookie": "__hdnea__=st=1758090609~exp=1758177009~acl=/*~hmac=f17e1d710b1ac3c2c6a9e55e8fdb9f0c940bb788e493543f9c98928d3fa21043"
     }
   ];
 
