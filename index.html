@@ -3,23 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sony liv</title>
-
-  <!-- Shaka Player -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
-
-  <!-- External CSS -->
-  <link rel="stylesheet" href="style.css">
+  <title>Seamless Iframe Player</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+    iframe {
+      border: none;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <div class="shaka-video-container" data-shaka-player>
-    <video autoplay playsinline preload="metadata"
-      poster="https://i.ibb.co/PGkCs5vz/ab188872-6178-43c2-a831-22a3de37390b.png">
-    </video>
-  </div>
-
-  <!-- External JS -->
-  <script src="script.js"></script>
+  <iframe 
+    src="https://replay-player.onrender.com/?url=https://in-mc-fdlive.fancode.com/mumbai/136741_english_hls_bd85d9d91112870ta-di_h264/index.m3u8" 
+    allowfullscreen>
+  </iframe>
 </body>
 </html>
