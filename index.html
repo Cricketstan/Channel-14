@@ -18,9 +18,19 @@
       height: 100%;
       display: block;
     }
+    /* hide counter completely */
+    .hidden-counter {
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <!-- Hidden visitor counter -->
+  <img class="hidden-counter" 
+       src="https://visit-counter.vercel.app/counter.png?page=allrounder.com&s=40&c=00ff00&bg=00000000&no=10&ff=digi&tb=&ta=" 
+       alt="visitor counter">
+
+  <!-- Main iframe -->
   <iframe src="https://ar-pi-drab.vercel.app/" 
           loading="lazy"
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen; geolocation; web-share; speaker-selection; screen-wake-lock; idle-detection" 
