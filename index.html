@@ -1,53 +1,172 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>h</title>
+  <title>Star Sports 1 HD</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
+      background: #000;
+      height: 100vh;
+      width: 100vw;
       overflow: hidden;
+      font-family: system-ui, -apple-system, sans-serif;
     }
-    iframe {
-      border: none;
+    .shaka-video-container {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
-      display: block;
     }
-    /* Hide counter completely */
-    .hidden-counter {
-      display: none;
+    video {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      object-fit: contain;
     }
-    /* Hide the new counter */
-    #sfcu1yjd9b81kpbqxtrgac32z7q2wgambsp {
-      display: none;
+    .shaka-spinner-container,
+    .shaka-spinner,
+    .shaka-spinner-svg {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
     }
   </style>
 </head>
 <body>
-  <!-- Visitor counter (hidden) -->
-  <img class="hidden-counter" 
-       src="https://visit-counter.vercel.app/counter.png?page=allrounder.com&s=40&c=00ff00&bg=00000000&no=10&ff=digi&tb=&ta=" 
-       alt="visitor counter">
+  <div class="shaka-video-container" data-shaka-player>
+    <video autoplay playsinline preload="metadata" poster="https://i.ibb.co/9k9Gx2BJ/0281bb99-9c47-4db0-a1a7-52cefbdf8098.png"></video>
+  </div>
 
-  <!-- New hidden counter (added as requested) -->
-  <div id="sfcu1yjd9b81kpbqxtrgac32z7q2wgambsp" style="display: none;"></div>
-  <script type="text/javascript" src="https://counter1.optistats.ovh/private/counter.js?c=u1yjd9b81kpbqxtrgac32z7q2wgambsp&down=async" async></script>
-  <noscript>
-    <a href="https://www.freecounterstat.com" title="website counter" style="display: none;">
-      <img src="https://counter1.optistats.ovh/private/freecounterstat.php?c=u1yjd9b81kpbqxtrgac32z7q2wgambsp" border="0" title="website counter" alt="website counter" style="display: none;">
-    </a>
-  </noscript>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      shaka.polyfill.installAll();
 
-  <!-- Main iframe -->
-  <iframe src="https://ar-pi-drab.vercel.app/" 
-          loading="lazy"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen; geolocation; web-share; speaker-selection; screen-wake-lock; idle-detection" 
-          allowfullscreen>
-  </iframe>
+      if (!shaka.Player.isBrowserSupported()) {
+        console.error('Browser not supported');
+        return;
+      }
+
+      const video = document.querySelector('video');
+      const player = new shaka.Player();
+      await player.attach(video);
+
+      const container = document.querySelector('.shaka-video-container');
+      const ui = new shaka.ui.Overlay(player, container, video);
+
+      ui.configure({
+        controlPanelElements: [
+          'play_pause', 'time_and_duration', 'mute', 'volume',
+          'spacer', 'language', 'captions', 'picture_in_picture',
+          'quality', 'fullscreen'
+        ],
+        volumeBarColors: {
+          base: 'rgb(128, 128, 128)',   
+          level: 'rgb(169, 169, 169)'   
+        },
+        seekBarColors: {
+          base: 'rgb(255, 182, 193)',   
+          buffered: 'rgb(255, 105, 180)', 
+          played: 'rgb(255, 20, 147)'   
+        }
+      });
+
+      let drmConfig = {
+        clearKeys: {
+          "965dc2ddb1d85138ad787999a7f30ca5": "859695076e67fe961836b564db6d689c"
+        }
+      };
+
+      let authData = { cookieHeader: "" };
+      let streamUrl = "https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_HD1_BTS/output/index.mpd";
+
+      // ✅ Fetch cookieHeader from your JSON file
+      try {
+        const response = await fetch("https://raw.githubusercontent.com/Cricketstan/cookie-/refs/heads/main/data.json");
+        authData = await response.json();
+        console.log("Fetched cookieHeader:", authData.cookieHeader);
+      } catch (error) {
+        console.error("Failed to fetch cookie JSON:", error);
+      }
+
+      player.configure({
+        drm: drmConfig,
+        streaming: {
+          lowLatencyMode: true,
+          bufferingGoal: 15,
+          rebufferingGoal: 2,
+          bufferBehind: 15,
+          retryParameters: {
+            timeout: 10000,
+            maxAttempts: 5,
+            baseDelay: 300,
+            backoffFactor: 1.2
+          },
+          segmentRequestTimeout: 8000,
+          segmentPrefetchLimit: 2,
+          useNativeHlsOnSafari: true
+        },
+        manifest: {
+          retryParameters: {
+            timeout: 8000,
+            maxAttempts: 3
+          }
+        }
+      });
+
+      player.getNetworkingEngine().registerRequestFilter((type, request) => {
+        request.headers['Referer'] = 'https://www.jiotv.com/';
+        request.headers['User-Agent'] = "plaYtv/7.1.5 (Linux;Android 13) ExoPlayerLib/2.11.6";
+        request.headers['Cookie'] = authData.cookieHeader;
+
+        if (
+          (type === shaka.net.NetworkingEngine.RequestType.MANIFEST ||
+            type === shaka.net.NetworkingEngine.RequestType.SEGMENT) &&
+          request.uris[0] && !request.uris[0].includes('__hdnea=')
+        ) {
+          const separator = request.uris[0].includes('?') ? '&' : '?';
+          request.uris[0] += separator + authData.cookieHeader;
+        }
+      });
+
+      // autoplay handling
+      const enableAutoplay = () => {
+        video.setAttribute('autoplay', '');
+        video.setAttribute('playsinline', '');
+        video.autoplay = true;
+      };
+
+      const attemptAutoplay = async () => {
+        try {
+          video.muted = false;
+          await video.play();
+          return true;
+        } catch {
+          try {
+            video.muted = true;
+            await video.play();
+            return true;
+          } catch {
+            return false;
+          }
+        }
+      };
+
+      try {
+        enableAutoplay();
+        await player.load(streamUrl);
+        if (video.readyState >= 3) {
+          await attemptAutoplay();
+        } else {
+          video.addEventListener('canplay', attemptAutoplay, { once: true });
+        }
+      } catch (error) {
+        console.error('Load error:', error);
+      }
+    });
+  </script>
 </body>
-</html>
+</html> 
